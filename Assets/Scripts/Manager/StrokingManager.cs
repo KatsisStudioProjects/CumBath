@@ -78,6 +78,7 @@ namespace CumBath.Manager
         {
             Instance = this;
             _eyesImage.sprite = _eyes[0];
+            _handAnim.runtimeAnimatorController = _handClips[0];
         }
 
         public void StartStroking()
@@ -124,6 +125,7 @@ namespace CumBath.Manager
                 * Time.deltaTime
                 * _speeds[4 - _cumLeft];
             _maxTimer -= Time.deltaTime * .25f;
+            _handAnim.speed = 1f + (3f - _maxTimer) / 3f;
 
             CumManager.Instance.IncreaseCurrent(Time.deltaTime * 10f);
 
