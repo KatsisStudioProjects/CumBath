@@ -37,6 +37,12 @@ namespace CumBath.Manager
         [SerializeField]
         private Sprite[] _cumSprites;
 
+        [SerializeField]
+        private Animator _handAnim;
+
+        [SerializeField]
+        private RuntimeAnimatorController[] _handClips;
+
         private float _height;
 
         private float _max;
@@ -78,6 +84,7 @@ namespace CumBath.Manager
         {
             _strokeButton.SetActive(false);
             _mainContainer.gameObject.SetActive(true);
+            _handAnim.SetBool("Masturbating", true);
             StartCoroutine(StartMinigame());
 
             _maxTimer = 3f;
@@ -136,6 +143,7 @@ namespace CumBath.Manager
 
         private IEnumerator CumAndProgress()
         {
+            _handAnim.SetBool("Masturbating", false);
             if (_timer > 0f)
             {
                 CumManager.Instance.SaveCurrent();
@@ -158,6 +166,7 @@ namespace CumBath.Manager
             {
                 _characters[4 - _peniesesLeft].sprite = _flaccidSprites[4 - _peniesesLeft];
                 _peniesesLeft--;
+                _handAnim.runtimeAnimatorController = _handClips[4 - _peniesesLeft];
                 _cumLeft = 4;
             }
 
@@ -171,6 +180,7 @@ namespace CumBath.Manager
                 if (!IsBonusLevel && CumManager.Instance.IsBathFull)
                 {
                     IsBonusLevel = true;
+                    _handAnim.gameObject.SetActive(false);
                     _eyesImage.sprite = _bonusEyes;
                     _strokeButton.SetActive(true);
                 }
