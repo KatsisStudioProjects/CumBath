@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -175,13 +176,13 @@ namespace CumBath.Manager
             {
                 _characters[4 - _peniesesLeft].sprite = _flaccidSprites[4 - _peniesesLeft];
                 _peniesesLeft--;
-                _handAnim.runtimeAnimatorController = _handClips[4 - _peniesesLeft];
-                _handImage.sprite = _handSprites[4 - _peniesesLeft];
                 _cumLeft = 4;
             }
 
             if (_peniesesLeft > 0)
             {
+                _handAnim.runtimeAnimatorController = _handClips[4 - _peniesesLeft];
+                _handImage.sprite = _handSprites[4 - _peniesesLeft];
                 _strokeButton.SetActive(true);
                 _eyesImage.sprite = _eyes[4 - _peniesesLeft];
             }
@@ -194,7 +195,18 @@ namespace CumBath.Manager
                     _eyesImage.sprite = _bonusEyes;
                     _strokeButton.SetActive(true);
                 }
+                else
+                {
+                    CumManager.Instance.SetVictoryLevel();
+                    StartCoroutine(ChangeScene());
+                }
             }
+        }
+
+        public IEnumerator ChangeScene()
+        {
+            yield return new WaitForSeconds(3f);
+            SceneManager.LoadScene("Victory");
         }
     }
 }
