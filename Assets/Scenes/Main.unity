@@ -1617,6 +1617,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2151097293012480134, guid: 47fea550b52a64945a237e1e3068cda5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
     - target: {fileID: 6908040313280716589, guid: 47fea550b52a64945a237e1e3068cda5, type: 3}
       propertyPath: m_Name
       value: Mist
