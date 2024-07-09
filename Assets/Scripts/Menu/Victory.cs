@@ -19,7 +19,7 @@ namespace CumBath.Menu
         private void Awake()
         {
             _image.sprite = _sprites[Mathf.Clamp(StaticData.VictoryIndex, 0, _sprites.Length - 1)];
-            _infoText.text = $"Total cum: {(int)StaticData.CumAmount} cL";
+            _infoText.text = $"Total cum: {(int)StaticData.CumAmount} L";
         }
 
         public void Replay()

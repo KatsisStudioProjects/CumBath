@@ -36,7 +36,7 @@ namespace CumBath.Manager
 
         private void UpdateUI()
         {
-            _mlText.text = $"{(int)(_totalMl + _currentMl)} cL";
+            _mlText.text = $"{(int)(_totalMl + _currentMl)} L";
         }
 
         public void IncreaseCurrent(float amount)
