@@ -129,7 +129,7 @@ namespace CumBath.Manager
             var pos = Mouse.current.position.ReadValue().y;
             _cursor.position = new(_cursor.position.x, pos + _cursor.rect.height / 2f);
 
-            _timer += (_fish.anchoredPosition.y > _cursor.anchoredPosition.y || _fish.anchoredPosition.y + _cursor.rect.height - _fish.rect.height < _cursor.anchoredPosition.y ? -1f : 2f)
+            _timer += (_fish.anchoredPosition.y - _fish.rect.height > _cursor.anchoredPosition.y || _fish.anchoredPosition.y + _cursor.rect.height < _cursor.anchoredPosition.y ? -1f : 2f)
                 * Time.deltaTime
                 * _speeds[4 - _cumLeft];
             _maxTimer -= Time.deltaTime * .25f;
