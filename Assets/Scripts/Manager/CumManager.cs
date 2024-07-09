@@ -17,10 +17,15 @@ namespace CumBath.Manager
         [SerializeField]
         private Sprite[] _cumLayers;
 
+        [SerializeField]
+        private Sprite _specialCum;
+
         private float _totalMl;
         private float _currentMl;
 
-        private int CumIndex => Mathf.Clamp(Mathf.FloorToInt(_totalMl / 100f) - 1, 0, _cumLayers.Length - 1);
+        private int UnclampedCumIndex => Mathf.FloorToInt(_totalMl / 100f) - 1;
+
+        private int CumIndex => Mathf.Clamp(UnclampedCumIndex, 0, _cumLayers.Length - 1);
 
         public bool IsBathFull => CumIndex == _cumLayers.Length - 1;
 
@@ -48,7 +53,15 @@ namespace CumBath.Manager
             if (_totalMl >= 100f)
             {
                 _bath.color = Color.white;
-                _bath.sprite = _cumLayers[CumIndex];
+
+                if (StrokingManager.Instance.IsBonusLevel && UnclampedCumIndex >= _cumLayers.Length)
+                {
+                    _bath.sprite = _specialCum;
+                }
+                else
+                {
+                    _bath.sprite = _cumLayers[CumIndex];
+                }
             }
         }
 

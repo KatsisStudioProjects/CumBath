@@ -1710,6 +1710,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 6262a75adc37e124bac0143995b6a1a9, type: 3}
   - {fileID: 21300000, guid: 577db5f367c9d634ca20994bc3050273, type: 3}
   - {fileID: 21300000, guid: d66fdce430340dc47801413504a43307, type: 3}
+  _specialCum: {fileID: 21300000, guid: 1936ad70100d69749adc22d7f17530c6, type: 3}
 --- !u!1 &1705228433
 GameObject:
   m_ObjectHideFlags: 0

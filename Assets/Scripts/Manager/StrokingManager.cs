@@ -6,8 +6,10 @@ using Random = UnityEngine.Random;
 
 namespace CumBath.Manager
 {
-    public class CatchMinigame : MonoBehaviour
+    public class StrokingManager : MonoBehaviour
     {
+        public static StrokingManager Instance { private set; get; }
+
         [SerializeField]
         private RectTransform _mainContainer, _fish, _cursor, _overallProgress;
 
@@ -49,10 +51,11 @@ namespace CumBath.Manager
 
         private int _amountLeft = 4;
 
-        private bool _isBonusLevel;
+        public bool IsBonusLevel { private set; get; }
 
         private void Awake()
         {
+            Instance = this;
             _eyesImage.sprite = _eyes[0];
         }
 
@@ -122,9 +125,9 @@ namespace CumBath.Manager
                 }
                 else
                 {
-                    if (!_isBonusLevel && CumManager.Instance.IsBathFull)
+                    if (!IsBonusLevel && CumManager.Instance.IsBathFull)
                     {
-                        _isBonusLevel = true;
+                        IsBonusLevel = true;
                         _eyesImage.sprite = _bonusEyes;
                         _strokeButton.SetActive(true);
                     }
