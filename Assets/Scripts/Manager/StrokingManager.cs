@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -31,24 +32,13 @@ namespace CumBath.Manager
 
         [SerializeField]
         private Sprite[] _flaccidSprites;
+        private Sprite[] _nonFlaccidSprites;
 
         [SerializeField]
-        private Image _cumImage;
+        private Image[] _cumImages;
 
         [SerializeField]
-        private Sprite[] _cumSprites;
-
-        [SerializeField]
-        private Animator _handAnim;
-
-        [SerializeField]
-        private Image _handImage;
-
-        [SerializeField]
-        private RuntimeAnimatorController[] _handClips;
-
-        [SerializeField]
-        private Sprite[] _handSprites;
+        private Animator[] _handAnims;
 
         [SerializeField]
         private AnimationCurve _progressCurve;
@@ -88,15 +78,28 @@ namespace CumBath.Manager
         {
             Instance = this;
             _eyesImage.sprite = _eyes[0];
-            _handAnim.runtimeAnimatorController = _handClips[0];
-            _handImage.sprite = _handSprites[0];
+            foreach (var a in _handAnims.Skip(1)) a.gameObject.SetActive(false);
+            foreach (var c in _cumImages) c.gameObject.SetActive(false);
+            _nonFlaccidSprites = _characters.Select(x => x.sprite).ToArray();
+        }
+
+        private void PlayMasturbation(bool state)
+        {
+            if (IsBonusLevel)
+            {
+                foreach (var a in _handAnims) a.SetBool("Masturbating", state);
+            }
+            else
+            {
+                _handAnims[4 - _peniesesLeft].SetBool("Masturbating", state);
+            }
         }
 
         public void StartStroking()
         {
             _strokeButton.SetActive(false);
             _mainContainer.gameObject.SetActive(true);
-            _handAnim.SetBool("Masturbating", true);
+            PlayMasturbation(true);
             StartCoroutine(StartMinigame());
 
             _maxTimer = 3f;
@@ -135,8 +138,8 @@ namespace CumBath.Manager
             _timer += (_fish.anchoredPosition.y - _fish.rect.height > _cursor.anchoredPosition.y || _fish.anchoredPosition.y + _cursor.rect.height < _cursor.anchoredPosition.y ? -1f : 2f)
                 * Time.deltaTime
                 * _speeds[4 - _cumLeft];
-            _maxTimer -= Time.deltaTime * .25f * _progressCurve.Evaluate(3f - _maxTimer);
-            _handAnim.speed = 1f + (3f - _maxTimer) / 3f;
+            _maxTimer -= Time.deltaTime * .5f * _progressCurve.Evaluate(3f - _maxTimer);
+            //_handAnim.speed = 1f + (3f - _maxTimer) / 3f;
 
             CumManager.Instance.IncreaseCurrent(Time.deltaTime * 10f);
 
@@ -156,17 +159,22 @@ namespace CumBath.Manager
 
         private IEnumerator CumAndProgress()
         {
-            _handAnim.SetBool("Masturbating", false);
+            PlayMasturbation(false);
             if (_timer > 0f)
             {
                 CumManager.Instance.SaveCurrent();
 
                 if (!IsBonusLevel)
                 {
-                    _cumImage.gameObject.SetActive(true);
-                    _cumImage.sprite = _cumSprites[4 - _peniesesLeft];
+                    _cumImages[4 - _peniesesLeft].gameObject.SetActive(true);
                     yield return new WaitForSeconds(1f);
-                    _cumImage.gameObject.SetActive(false);
+                    _cumImages[4 - _peniesesLeft].gameObject.SetActive(false);
+                }
+                else
+                {
+                    foreach (var c in _cumImages) c.gameObject.SetActive(true);
+                    yield return new WaitForSeconds(1f);
+                    foreach (var c in _cumImages) c.gameObject.SetActive(false);
                 }
             }
             else
@@ -178,14 +186,14 @@ namespace CumBath.Manager
             if (_cumLeft == 0 && !IsBonusLevel)
             {
                 _characters[4 - _peniesesLeft].sprite = _flaccidSprites[4 - _peniesesLeft];
+                _handAnims[4 - _peniesesLeft].gameObject.SetActive(false);
                 _peniesesLeft--;
                 _cumLeft = 4;
             }
 
             if (_peniesesLeft > 0)
             {
-                _handAnim.runtimeAnimatorController = _handClips[4 - _peniesesLeft];
-                _handImage.sprite = _handSprites[4 - _peniesesLeft];
+                _handAnims[4 - _peniesesLeft].gameObject.SetActive(true);
                 _strokeButton.SetActive(true);
                 _eyesImage.sprite = _eyes[4 - _peniesesLeft];
             }
@@ -194,7 +202,15 @@ namespace CumBath.Manager
                 if (!IsBonusLevel && CumManager.Instance.IsBathFull)
                 {
                     IsBonusLevel = true;
-                    _handAnim.gameObject.SetActive(false);
+                    foreach (var a in _handAnims)
+                    {
+                        a.gameObject.SetActive(true);
+                    }
+                    for (int i = 0; i < _characters.Length; i++)
+                    {
+                        _characters[i].sprite = _nonFlaccidSprites[i];
+                    }
+                    PlayMasturbation(false);
                     _eyesImage.sprite = _bonusEyes;
                     _strokeButton.SetActive(true);
                 }
