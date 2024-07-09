@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -37,6 +38,18 @@ namespace CumBath.Manager
         [SerializeField]
         private Sprite[] _cumSprites;
 
+        [SerializeField]
+        private Animator _handAnim;
+
+        [SerializeField]
+        private Image _handImage;
+
+        [SerializeField]
+        private RuntimeAnimatorController[] _handClips;
+
+        [SerializeField]
+        private Sprite[] _handSprites;
+
         private float _height;
 
         private float _max;
@@ -72,12 +85,15 @@ namespace CumBath.Manager
         {
             Instance = this;
             _eyesImage.sprite = _eyes[0];
+            _handAnim.runtimeAnimatorController = _handClips[0];
+            _handImage.sprite = _handSprites[0];
         }
 
         public void StartStroking()
         {
             _strokeButton.SetActive(false);
             _mainContainer.gameObject.SetActive(true);
+            _handAnim.SetBool("Masturbating", true);
             StartCoroutine(StartMinigame());
 
             _maxTimer = 3f;
@@ -117,6 +133,7 @@ namespace CumBath.Manager
                 * Time.deltaTime
                 * _speeds[4 - _cumLeft];
             _maxTimer -= Time.deltaTime * .25f;
+            _handAnim.speed = 1f + (3f - _maxTimer) / 3f;
 
             CumManager.Instance.IncreaseCurrent(Time.deltaTime * 10f);
 
@@ -136,6 +153,7 @@ namespace CumBath.Manager
 
         private IEnumerator CumAndProgress()
         {
+            _handAnim.SetBool("Masturbating", false);
             if (_timer > 0f)
             {
                 CumManager.Instance.SaveCurrent();
@@ -163,6 +181,8 @@ namespace CumBath.Manager
 
             if (_peniesesLeft > 0)
             {
+                _handAnim.runtimeAnimatorController = _handClips[4 - _peniesesLeft];
+                _handImage.sprite = _handSprites[4 - _peniesesLeft];
                 _strokeButton.SetActive(true);
                 _eyesImage.sprite = _eyes[4 - _peniesesLeft];
             }
@@ -171,10 +191,22 @@ namespace CumBath.Manager
                 if (!IsBonusLevel && CumManager.Instance.IsBathFull)
                 {
                     IsBonusLevel = true;
+                    _handAnim.gameObject.SetActive(false);
                     _eyesImage.sprite = _bonusEyes;
                     _strokeButton.SetActive(true);
                 }
+                else
+                {
+                    CumManager.Instance.SetVictoryLevel();
+                    StartCoroutine(ChangeScene());
+                }
             }
+        }
+
+        public IEnumerator ChangeScene()
+        {
+            yield return new WaitForSeconds(3f);
+            SceneManager.LoadScene("Victory");
         }
     }
 }
