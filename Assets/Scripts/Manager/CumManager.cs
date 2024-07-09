@@ -68,7 +68,7 @@ namespace CumBath.Manager
         public void SetVictoryLevel()
         {
             if (UnclampedCumIndex >= _cumLayers.Length) StaticData.VictoryIndex = 0;
-            else StaticData.VictoryIndex = (_cumLayers.Length - 1) - (CumIndex + 1);
+            else StaticData.VictoryIndex = (_cumLayers.Length - 1) - CumIndex + 1;
             StaticData.CumAmount = _totalMl;
         }
 
