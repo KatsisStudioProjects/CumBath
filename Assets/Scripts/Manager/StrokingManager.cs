@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -24,6 +25,12 @@ namespace CumBath.Manager
 
         [SerializeField]
         private Sprite _bonusEyes;
+
+        [SerializeField]
+        private Image[] _characters;
+
+        [SerializeField]
+        private Sprite[] _flaccidSprites;
 
         private float _height;
 
@@ -125,12 +132,14 @@ namespace CumBath.Manager
                 _cumLeft--;
                 if (_cumLeft == 0)
                 {
+                    _characters[4 - _peniesesLeft].sprite = _flaccidSprites[4 - _peniesesLeft];
                     _peniesesLeft--;
                     _cumLeft = 4;
                 }
 
                 if (_peniesesLeft > 0)
                 {
+                    _characters[_characters.Length - 1].sprite = _flaccidSprites[_characters.Length - 1];
                     _strokeButton.SetActive(true);
                     _eyesImage.sprite = _eyes[4 - _peniesesLeft];
                 }
