@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Random = UnityEngine.Random;
 
 namespace CumBath.Manager
@@ -7,7 +8,7 @@ namespace CumBath.Manager
     public class CatchMinigame : MonoBehaviour
     {
         [SerializeField]
-        private RectTransform _fish, _cursor, _overallProgress;
+        private RectTransform _mainContainer, _fish, _cursor, _overallProgress;
 
         private float _height;
 
@@ -27,13 +28,15 @@ namespace CumBath.Manager
         private float _maxTimer;
 
         /// <summary>
-        /// Fish the cursor representing the fish is going by in the minigale
+        /// Fish the cursor representing the fish is going by in the minigame
         /// </summary>
         const float _fishBaseSpeed = 300f;
 
-        private void OnEnable()
+        private bool _isActive;
+
+        private void Awake()
         {
-            _height = ((RectTransform)transform).rect.height;
+            _height = _mainContainer.rect.height;
             _max = -_height + _fish.rect.height;
             _target = Random.Range(0f, _max);
             _timer = 0f;
@@ -45,20 +48,18 @@ namespace CumBath.Manager
 
         private IEnumerator StartMinigame()
         {
-            _catchIt.SetActive(true);
             yield return new WaitForSeconds(1f);
-            _catchIt.SetActive(false);
+            _isActive = true;
         }
 
         private void Update()
         {
-            if (_catchIt.activeInHierarchy)
+            if (!_isActive)
             {
-                // Player text info is still active, we wait for it to be gone
                 return;
             }
 
-            var dir = Time.deltaTime * (_fish.anchoredPosition.y < _target ? 1f : -1f) * _fishBaseSpeed * Fish.Size;
+            var dir = Time.deltaTime * (_fish.anchoredPosition.y < _target ? 1f : -1f) * _fishBaseSpeed;
             _fish.anchoredPosition = new(_fish.anchoredPosition.x, _fish.anchoredPosition.y + dir);
 
             if (Mathf.Abs(_fish.anchoredPosition.y - _target) < 10f)
@@ -66,18 +67,14 @@ namespace CumBath.Manager
                 _target = Random.Range(0f, _max);
             }
 
-            var pos = CursorUtils.Position.y;
+            var pos = Mouse.current.position.ReadValue().y;
             _cursor.position = new(_cursor.position.x, pos + _cursor.rect.height / 2f);
 
             _timer += (_fish.anchoredPosition.y > _cursor.anchoredPosition.y || _fish.anchoredPosition.y + _cursor.rect.height - _fish.rect.height < _cursor.anchoredPosition.y ? -1f : 1f) * Time.deltaTime;
             _maxTimer -= Time.deltaTime * .5f;
-            if (_timer >= Mathf.Abs(_maxTimer))
+            if (Mathf.Abs(_timer) >= _maxTimer)
             {
-                OnDone(true);
-            }
-            else if (_timer <= -_maxTimer)
-            {
-                OnDone(false);
+                _isActive = false;
             }
             else
             {
