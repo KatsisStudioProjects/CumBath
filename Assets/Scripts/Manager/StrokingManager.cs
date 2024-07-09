@@ -49,7 +49,10 @@ namespace CumBath.Manager
 
         private bool _isActive;
 
-        private int _amountLeft = 4;
+        private int _peniesesLeft = 4;
+        private int _cumLeft = 4;
+
+        private float[] _speeds = { 1f, 1.5f, 2.5f, 4f };
 
         public bool IsBonusLevel { private set; get; }
 
@@ -61,7 +64,6 @@ namespace CumBath.Manager
 
         public void StartStroking()
         {
-            _amountLeft--;
             _strokeButton.SetActive(false);
             _mainContainer.gameObject.SetActive(true);
             StartCoroutine(StartMinigame());
@@ -99,10 +101,12 @@ namespace CumBath.Manager
             var pos = Mouse.current.position.ReadValue().y;
             _cursor.position = new(_cursor.position.x, pos + _cursor.rect.height / 2f);
 
-            _timer += (_fish.anchoredPosition.y > _cursor.anchoredPosition.y || _fish.anchoredPosition.y + _cursor.rect.height - _fish.rect.height < _cursor.anchoredPosition.y ? -1f : 2f) * Time.deltaTime;
+            _timer += (_fish.anchoredPosition.y > _cursor.anchoredPosition.y || _fish.anchoredPosition.y + _cursor.rect.height - _fish.rect.height < _cursor.anchoredPosition.y ? -1f : 2f)
+                * Time.deltaTime
+                * _speeds[4 - _cumLeft];
             _maxTimer -= Time.deltaTime * .25f;
 
-            CumManager.Instance.IncreaseCurrent(Time.deltaTime * 20f);
+            CumManager.Instance.IncreaseCurrent(Time.deltaTime * 5f);
 
             if (Mathf.Abs(_timer) >= _maxTimer)
             {
@@ -118,10 +122,17 @@ namespace CumBath.Manager
                     CumManager.Instance.CancelCurrent();
                 }
 
-                if (_amountLeft > 0)
+                _cumLeft--;
+                if (_cumLeft == 0)
+                {
+                    _peniesesLeft--;
+                    _cumLeft = 4;
+                }
+
+                if (_peniesesLeft > 0)
                 {
                     _strokeButton.SetActive(true);
-                    _eyesImage.sprite = _eyes[4 - _amountLeft];
+                    _eyesImage.sprite = _eyes[4 - _peniesesLeft];
                 }
                 else
                 {
