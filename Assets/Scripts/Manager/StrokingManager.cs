@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace CumBath.Manager
@@ -12,6 +13,12 @@ namespace CumBath.Manager
 
         [SerializeField]
         private GameObject _strokeButton;
+
+        [SerializeField]
+        private Image _eyesImage;
+
+        [SerializeField]
+        private Sprite[] _eyes;
 
         private float _height;
 
@@ -39,8 +46,14 @@ namespace CumBath.Manager
 
         private int _amountLeft = 4;
 
+        private void Awake()
+        {
+            _eyesImage.sprite = _eyes[0];
+        }
+
         public void StartStroking()
         {
+            _eyesImage.sprite = _eyes[4 - _amountLeft];
             _amountLeft--;
             _strokeButton.SetActive(false);
             _mainContainer.gameObject.SetActive(true);
@@ -82,7 +95,7 @@ namespace CumBath.Manager
             _timer += (_fish.anchoredPosition.y > _cursor.anchoredPosition.y || _fish.anchoredPosition.y + _cursor.rect.height - _fish.rect.height < _cursor.anchoredPosition.y ? -1f : 2f) * Time.deltaTime;
             _maxTimer -= Time.deltaTime * .25f;
 
-            CumManager.Instance.IncreaseCurrent(Time.deltaTime * 10f);
+            CumManager.Instance.IncreaseCurrent(Time.deltaTime * 20f);
 
             if (Mathf.Abs(_timer) >= _maxTimer)
             {

@@ -20,6 +20,8 @@ namespace CumBath.Manager
         private float _totalMl;
         private float _currentMl;
 
+        private int CumIndex => Mathf.Clamp(Mathf.FloorToInt(_totalMl / 100f) - 1, 0, _cumLayers.Length - 1);
+
         private void Awake()
         {
             Instance = this;
@@ -44,7 +46,7 @@ namespace CumBath.Manager
             if (_totalMl >= 100f)
             {
                 _bath.color = Color.white;
-                _bath.sprite = _cumLayers[Mathf.FloorToInt(_totalMl / 100f) - 1];
+                _bath.sprite = _cumLayers[CumIndex];
             }
         }
 
