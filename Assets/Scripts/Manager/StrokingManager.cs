@@ -95,6 +95,18 @@ namespace CumBath.Manager
             }
         }
 
+        private void SetSpeed(float speed)
+        {
+            if (IsBonusLevel)
+            {
+                foreach (var a in _handAnims) a.speed = speed;
+            }
+            else
+            {
+                _handAnims[4 - _peniesesLeft].speed = speed;
+            }
+        }
+
         public void StartStroking()
         {
             _strokeButton.SetActive(false);
@@ -138,8 +150,8 @@ namespace CumBath.Manager
             _timer += (_fish.anchoredPosition.y - _fish.rect.height > _cursor.anchoredPosition.y || _fish.anchoredPosition.y + _cursor.rect.height < _cursor.anchoredPosition.y ? -1f : 2f)
                 * Time.deltaTime
                 * _speeds[4 - _cumLeft];
-            _maxTimer -= Time.deltaTime * .5f * _progressCurve.Evaluate(3f - _maxTimer);
-            //_handAnim.speed = 1f + (3f - _maxTimer) / 3f;
+            _maxTimer -= Time.deltaTime * 1f * _progressCurve.Evaluate(3f - _maxTimer);
+            SetSpeed(1f + (3f - _maxTimer) / 3f * 3f);
 
             CumManager.Instance.IncreaseCurrent(Time.deltaTime * 10f);
 
