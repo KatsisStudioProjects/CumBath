@@ -10,6 +10,9 @@ namespace CumBath.Manager
         [SerializeField]
         private RectTransform _mainContainer, _fish, _cursor, _overallProgress;
 
+        [SerializeField]
+        private GameObject _strokeButton;
+
         private float _height;
 
         private float _max;
@@ -34,16 +37,22 @@ namespace CumBath.Manager
 
         private bool _isActive;
 
-        private void Awake()
+        private int _amountLeft = 4;
+
+        public void StartStroking()
         {
+            _amountLeft--;
+            _strokeButton.SetActive(false);
+            _mainContainer.gameObject.SetActive(true);
+            StartCoroutine(StartMinigame());
+
+            _maxTimer = 3f;
             _height = _mainContainer.rect.height;
             _max = -_height + _fish.rect.height;
             _target = Random.Range(0f, _max);
             _timer = 0f;
-            _maxTimer = 3f;
             _overallProgress.localScale = new(1f, .5f, 1f);
             _cursor.position = new(_cursor.position.x, _height / 2f + _cursor.rect.height);
-            StartCoroutine(StartMinigame());
         }
 
         private IEnumerator StartMinigame()
@@ -70,11 +79,27 @@ namespace CumBath.Manager
             var pos = Mouse.current.position.ReadValue().y;
             _cursor.position = new(_cursor.position.x, pos + _cursor.rect.height / 2f);
 
-            _timer += (_fish.anchoredPosition.y > _cursor.anchoredPosition.y || _fish.anchoredPosition.y + _cursor.rect.height - _fish.rect.height < _cursor.anchoredPosition.y ? -1f : 1f) * Time.deltaTime;
-            _maxTimer -= Time.deltaTime * .5f;
+            _timer += (_fish.anchoredPosition.y > _cursor.anchoredPosition.y || _fish.anchoredPosition.y + _cursor.rect.height - _fish.rect.height < _cursor.anchoredPosition.y ? -1f : 2f) * Time.deltaTime;
+            _maxTimer -= Time.deltaTime * .25f;
+
+            CumManager.Instance.IncreaseCurrent(Time.deltaTime * 10f);
+
             if (Mathf.Abs(_timer) >= _maxTimer)
             {
                 _isActive = false;
+                _mainContainer.gameObject.SetActive(false);
+                if (_amountLeft > 0)
+                {
+                    _strokeButton.SetActive(true);
+                }
+                if (_timer > 0f)
+                {
+                    CumManager.Instance.SaveCurrent();
+                }
+                else
+                {
+                    CumManager.Instance.CancelCurrent();
+                }
             }
             else
             {
