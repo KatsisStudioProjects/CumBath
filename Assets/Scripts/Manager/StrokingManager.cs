@@ -20,6 +20,9 @@ namespace CumBath.Manager
         [SerializeField]
         private Sprite[] _eyes;
 
+        [SerializeField]
+        private Sprite _bonusEyes;
+
         private float _height;
 
         private float _max;
@@ -46,6 +49,8 @@ namespace CumBath.Manager
 
         private int _amountLeft = 4;
 
+        private bool _isBonusLevel;
+
         private void Awake()
         {
             _eyesImage.sprite = _eyes[0];
@@ -53,7 +58,6 @@ namespace CumBath.Manager
 
         public void StartStroking()
         {
-            _eyesImage.sprite = _eyes[4 - _amountLeft];
             _amountLeft--;
             _strokeButton.SetActive(false);
             _mainContainer.gameObject.SetActive(true);
@@ -101,10 +105,7 @@ namespace CumBath.Manager
             {
                 _isActive = false;
                 _mainContainer.gameObject.SetActive(false);
-                if (_amountLeft > 0)
-                {
-                    _strokeButton.SetActive(true);
-                }
+
                 if (_timer > 0f)
                 {
                     CumManager.Instance.SaveCurrent();
@@ -112,6 +113,21 @@ namespace CumBath.Manager
                 else
                 {
                     CumManager.Instance.CancelCurrent();
+                }
+
+                if (_amountLeft > 0)
+                {
+                    _strokeButton.SetActive(true);
+                    _eyesImage.sprite = _eyes[4 - _amountLeft];
+                }
+                else
+                {
+                    if (!_isBonusLevel && CumManager.Instance.IsBathFull)
+                    {
+                        _isBonusLevel = true;
+                        _eyesImage.sprite = _bonusEyes;
+                        _strokeButton.SetActive(true);
+                    }
                 }
             }
             else

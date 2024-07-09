@@ -22,6 +22,8 @@ namespace CumBath.Manager
 
         private int CumIndex => Mathf.Clamp(Mathf.FloorToInt(_totalMl / 100f) - 1, 0, _cumLayers.Length - 1);
 
+        public bool IsBathFull => CumIndex == _cumLayers.Length - 1;
+
         private void Awake()
         {
             Instance = this;
