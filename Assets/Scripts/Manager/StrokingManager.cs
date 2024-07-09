@@ -41,7 +41,13 @@ namespace CumBath.Manager
         private Animator _handAnim;
 
         [SerializeField]
+        private Image _handImage;
+
+        [SerializeField]
         private RuntimeAnimatorController[] _handClips;
+
+        [SerializeField]
+        private Sprite[] _handSprites;
 
         private float _height;
 
@@ -79,6 +85,7 @@ namespace CumBath.Manager
             Instance = this;
             _eyesImage.sprite = _eyes[0];
             _handAnim.runtimeAnimatorController = _handClips[0];
+            _handImage.sprite = _handSprites[0];
         }
 
         public void StartStroking()
@@ -169,6 +176,7 @@ namespace CumBath.Manager
                 _characters[4 - _peniesesLeft].sprite = _flaccidSprites[4 - _peniesesLeft];
                 _peniesesLeft--;
                 _handAnim.runtimeAnimatorController = _handClips[4 - _peniesesLeft];
+                _handImage.sprite = _handSprites[4 - _peniesesLeft];
                 _cumLeft = 4;
             }
 
