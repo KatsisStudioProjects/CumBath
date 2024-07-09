@@ -1,7 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -31,6 +30,12 @@ namespace CumBath.Manager
 
         [SerializeField]
         private Sprite[] _flaccidSprites;
+
+        [SerializeField]
+        private Image _cumImage;
+
+        [SerializeField]
+        private Sprite[] _cumSprites;
 
         private float _height;
 
@@ -113,50 +118,62 @@ namespace CumBath.Manager
                 * _speeds[4 - _cumLeft];
             _maxTimer -= Time.deltaTime * .25f;
 
-            CumManager.Instance.IncreaseCurrent(Time.deltaTime * 5f);
+            CumManager.Instance.IncreaseCurrent(Time.deltaTime * 10f);
 
             if (Mathf.Abs(_timer) >= _maxTimer)
             {
                 _isActive = false;
                 _mainContainer.gameObject.SetActive(false);
 
-                if (_timer > 0f)
-                {
-                    CumManager.Instance.SaveCurrent();
-                }
-                else
-                {
-                    CumManager.Instance.CancelCurrent();
-                }
-
-                _cumLeft--;
-                if (_cumLeft == 0)
-                {
-                    _characters[4 - _peniesesLeft].sprite = _flaccidSprites[4 - _peniesesLeft];
-                    _peniesesLeft--;
-                    _cumLeft = 4;
-                }
-
-                if (_peniesesLeft > 0)
-                {
-                    _characters[_characters.Length - 1].sprite = _flaccidSprites[_characters.Length - 1];
-                    _strokeButton.SetActive(true);
-                    _eyesImage.sprite = _eyes[4 - _peniesesLeft];
-                }
-                else
-                {
-                    if (!IsBonusLevel && CumManager.Instance.IsBathFull)
-                    {
-                        IsBonusLevel = true;
-                        _eyesImage.sprite = _bonusEyes;
-                        _strokeButton.SetActive(true);
-                    }
-                }
+                StartCoroutine(CumAndProgress());
             }
             else
             {
                 var size = ((_timer / _maxTimer) + 1f) / 2f;
                 _overallProgress.localScale = new(1f, size, 1f);
+            }
+        }
+
+        private IEnumerator CumAndProgress()
+        {
+            if (_timer > 0f)
+            {
+                CumManager.Instance.SaveCurrent();
+
+                if (!IsBonusLevel)
+                {
+                    _cumImage.gameObject.SetActive(true);
+                    _cumImage.sprite = _cumSprites[4 - _peniesesLeft];
+                    yield return new WaitForSeconds(1f);
+                    _cumImage.gameObject.SetActive(false);
+                }
+            }
+            else
+            {
+                CumManager.Instance.CancelCurrent();
+            }
+
+            _cumLeft--;
+            if (_cumLeft == 0 && !IsBonusLevel)
+            {
+                _characters[4 - _peniesesLeft].sprite = _flaccidSprites[4 - _peniesesLeft];
+                _peniesesLeft--;
+                _cumLeft = 4;
+            }
+
+            if (_peniesesLeft > 0)
+            {
+                _strokeButton.SetActive(true);
+                _eyesImage.sprite = _eyes[4 - _peniesesLeft];
+            }
+            else
+            {
+                if (!IsBonusLevel && CumManager.Instance.IsBathFull)
+                {
+                    IsBonusLevel = true;
+                    _eyesImage.sprite = _bonusEyes;
+                    _strokeButton.SetActive(true);
+                }
             }
         }
     }
