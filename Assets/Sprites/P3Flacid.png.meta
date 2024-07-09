@@ -1,16 +1,10 @@
 fileFormatVersion: 2
-guid: 683d4303f55fcc546aa3344246f78257
+guid: 54dd0a680747df14ab178ab5cd0db16f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7407740391569778402
-    second: PenisErect_0
-  - first:
-      213: -6630145866759117390
-    second: PenisErect_1
-  - first:
-      213: -29973195086156610
-    second: PenisErect_2
+      213: 4021994633781419573
+    second: P3Flacid_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -145,35 +139,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: PenisErect_0
+      name: P3Flacid_0
       rect:
         serializedVersion: 2
-        x: 1271
-        y: 891
-        width: 400
-        height: 189
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 2e664d363a49dc660800000000000000
-      internalID: 7407740391569778402
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: PenisErect_1
-      rect:
-        serializedVersion: 2
-        x: 299
+        x: 316
         y: 0
-        width: 295
-        height: 204
+        width: 240
+        height: 97
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -182,30 +154,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2b56cc2567dfcf3a0800000000000000
-      internalID: -6630145866759117390
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: PenisErect_2
-      rect:
-        serializedVersion: 2
-        x: 1149
-        y: 0
-        width: 228
-        height: 247
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: ebc2b12b983859ff0800000000000000
-      internalID: -29973195086156610
+      spriteID: 53e911b5fcef0d730800000000000000
+      internalID: 4021994633781419573
       vertices: []
       indices: 
       edges: []
@@ -222,9 +172,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      PenisErect_0: 7407740391569778402
-      PenisErect_1: -6630145866759117390
-      PenisErect_2: -29973195086156610
+      P3Flacid_0: 4021994633781419573
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
