@@ -153,7 +153,7 @@ namespace CumBath.Manager
             _maxTimer -= Time.deltaTime * 1f * _progressCurve.Evaluate(3f - _maxTimer);
             SetSpeed(1f + (3f - _maxTimer) / 3f * 3f);
 
-            CumManager.Instance.IncreaseCurrent(Time.deltaTime * 2.5f);
+            CumManager.Instance.IncreaseCurrent(Time.deltaTime * 5f);
 
             if (Mathf.Abs(_timer) >= _maxTimer)
             {
